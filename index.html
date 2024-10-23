@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jogo da Velha</title>
+    <style>
+        
+        body{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+
+        .divCaixaPRINCIPAL .divColuna div {
+            width: 150px;
+            height: 150px;
+            border: 6px solid black;
+            cursor: pointer;
+            text-align: center;
+            font-size: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .divColuna {
+            display: flex;
+            justify-content: center;
+        }
+
+        .resultado {
+            font-size: 24px;
+            margin-top: 20px;
+            text-align: center;
+            height: 20px;
+        }
+
+        .vencedor {
+            background-color: green;
+            color: white;
+        }
+
+        .perdedor {
+            background-color: red;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="divCaixaPRINCIPAL">
+        <div class="divColuna">
+            <div id="campo1" onclick="marcarCampo(this)"></div>
+            <div id="campo2" onclick="marcarCampo(this)"></div>
+            <div id="campo3" onclick="marcarCampo(this)"></div>
+        </div>
+        <div class="divColuna">
+            <div id="campo4" onclick="marcarCampo(this)"></div>
+            <div id="campo5" onclick="marcarCampo(this)"></div>
+            <div id="campo6" onclick="marcarCampo(this)"></div>
+        </div>
+        <div class="divColuna">
+            <div id="campo7" onclick="marcarCampo(this)"></div>
+            <div id="campo8" onclick="marcarCampo(this)"></div>
+            <div id="campo9" onclick="marcarCampo(this)"></div>
+        </div>
+    </div>
+    <div class="resultado" id="resultado"></div>
+    <br>
+    <button onclick="resetarJogo()">Resetar</button>
+    <script>
+        var jogadorAtual = 'X';
+
+        function marcarCampo(divCaixa) {
+            if (divCaixa.textContent === '' && document.getElementById('resultado').textContent === '') {
+                divCaixa.textContent = jogadorAtual;
+                if (verificarVencedor()) {
+                    document.getElementById('resultado').textContent = jogadorAtual + " ganhou!";
+                    colorirCampos();
+                } else {
+                    jogadorAtual = jogadorAtual === 'X' ? 'O' : 'X';
+                }
+            }
+        }
+
+        function verificarVencedor() {
+            const campo1 = document.getElementById('campo1').textContent;
+            const campo2 = document.getElementById('campo2').textContent;
+            const campo3 = document.getElementById('campo3').textContent;
+            const campo4 = document.getElementById('campo4').textContent;
+            const campo5 = document.getElementById('campo5').textContent;
+            const campo6 = document.getElementById('campo6').textContent;
+            const campo7 = document.getElementById('campo7').textContent;
+            const campo8 = document.getElementById('campo8').textContent;
+            const campo9 = document.getElementById('campo9').textContent;
+
+            if ((campo1 === jogadorAtual && campo2 === jogadorAtual && campo3 === jogadorAtual) ||
+                (campo4 === jogadorAtual && campo5 === jogadorAtual && campo6 === jogadorAtual) ||
+                (campo7 === jogadorAtual && campo8 === jogadorAtual && campo9 === jogadorAtual) ||
+                (campo1 === jogadorAtual && campo4 === jogadorAtual && campo7 === jogadorAtual) ||
+                (campo2 === jogadorAtual && campo5 === jogadorAtual && campo8 === jogadorAtual) ||
+                (campo3 === jogadorAtual && campo6 === jogadorAtual && campo9 === jogadorAtual) ||
+                (campo1 === jogadorAtual && campo5 === jogadorAtual && campo9 === jogadorAtual) ||
+                (campo3 === jogadorAtual && campo5 === jogadorAtual && campo7 === jogadorAtual)) {
+                return true;
+            }
+            return false;
+        }
+
+        function colorirCampos() {
+            const vitoria = [
+                ['campo1', 'campo2', 'campo3'],
+                ['campo4', 'campo5', 'campo6'],
+                ['campo7', 'campo8', 'campo9'],
+                ['campo1', 'campo4', 'campo7'],
+                ['campo2', 'campo5', 'campo8'],
+                ['campo3', 'campo6', 'campo9'],
+                ['campo1', 'campo5', 'campo9'],
+                ['campo3', 'campo5', 'campo7']
+            ];
+
+            var camposVencedores = [];
+            vitoria.forEach(combinacao => {
+                if (combinacao.every(campo => document.getElementById(campo).textContent === jogadorAtual)) {
+                    camposVencedores = combinacao;
+                }
+            });
+
+            for (var i = 1; i <= 9; i++) {
+                const campo = document.getElementById('campo' + i);
+                if (camposVencedores.includes('campo' + i)) {
+                    campo.classList.add('vencedor');
+                } else {
+                    campo.classList.add('perdedor');
+                }
+            }
+            
+        }
+
+        function resetarJogo() {
+            for (var i = 1; i <= 9; i++) {
+                const campo = document.getElementById('campo' + i);
+                campo.textContent = '';
+                campo.classList.remove('vencedor', 'perdedor');
+            }
+            document.getElementById('resultado').textContent = '';
+            jogadorAtual = 'X';
+        }
+    </script>
+</body>
+</html>
